@@ -3,7 +3,7 @@
 1. Configurations
 
 ```bash
-export PROJECT_ID=
+export PROJECT_ID="$( gcloud config get-value project )"
 gcloud config set run/platform managed
 gcloud config set run/region asia-northeast1
 ```
@@ -12,18 +12,18 @@ gcloud config set run/region asia-northeast1
 
 ```bash
 # Build & Run
-gcloud alpha builds submit --pack image="gcr.io/${PROJECT_ID}/my-app"
+gcloud builds submit --pack image="gcr.io/${PROJECT_ID}/my-app"
 gcloud run deploy --image "gcr.io/${PROJECT_ID}/my-app"
 
 # Replace the service
 gcloud beta run services replace service.yaml
 
 # Build & push the next version
-gcloud alpha builds submit --pack image="gcr.io/${PROJECT_ID}/my-app:green"
-gcloud beta run deploy --image gcr.io/${PROJECT_ID}/my-app:green --no-traffic --tag green
+gcloud builds submit --pack image="gcr.io/${PROJECT_ID}/my-app:green"
+gcloud beta run deploy --image gcr.io/${PROJECT_ID}/my-app:green --no-traffic
 
 # Granual deployment
-gcloud beta run services update-traffic my-app --to-tags green=50
+gcloud run services update-traffic my-app --to-revisions green=50
 gcloud run services describe my-app
 
 # Rollback
